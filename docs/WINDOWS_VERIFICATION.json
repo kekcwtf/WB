@@ -1,0 +1,20 @@
+{
+  "platform": "win32",
+  "runner_os": "Windows",
+  "checks": [
+    "install",
+    "gui_subsystem",
+    "desktop_shortcut",
+    "installed_executable_start",
+    "credential_manager",
+    "reinstall_preserves_database_and_credentials",
+    "uninstall_preserves_database_and_credentials"
+  ],
+  "installer": "WB-Profit-Desktop-Setup.exe",
+  "sha256": "9c1086ac05abb6bcec4a2c5ce2eb753b957205b6a478b941c4a749b652107e78",
+  "limitations": [
+    "No real WB API calls",
+    "Windows runner is not a Windows 11 user PC",
+    "Reinstall tested with same version; cross-version upgrade not yet verified"
+  ]
+}
