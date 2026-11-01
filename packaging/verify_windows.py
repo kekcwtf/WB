@@ -10,6 +10,7 @@ import struct
 import subprocess
 import sys
 import tempfile
+import time
 import uuid
 
 
@@ -37,6 +38,17 @@ def run(command, *, timeout=120, accepted=(0,)):
     process = subprocess.run(command, timeout=timeout, capture_output=True, text=True)
     if process.returncode not in accepted:
         raise RuntimeError(f'Проверка завершилась с кодом {process.returncode}: {Path(command[0]).name}')
+
+
+def uninstall(executable, logs):
+    run([str(executable), '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/LOG='+str(logs/'uninstall.log')])
+    # Inno запускает отдельный помощник для удаления самого unins000.exe.
+    # Возврат основного процесса ещё не означает, что помощник закрыл файл.
+    deadline = time.monotonic() + 15
+    while executable.exists():
+        if time.monotonic() >= deadline:
+            raise RuntimeError('Деинсталлятор не завершил удаление собственного файла')
+        time.sleep(0.05)
 
 
 def verify(installer):
@@ -105,6 +117,7 @@ def verify(installer):
                 run([str(executable), '--smoke-test'], timeout=30)
                 preserved()
 
+            uninstall_completed = False
             try:
                 run([*command,'/LOG='+str(logs/'install.log')], accepted=(0, 3010))
                 installed()
@@ -112,14 +125,15 @@ def verify(installer):
                 run([*command,'/LOG='+str(logs/'reinstall.log')], accepted=(0, 3010))
                 installed()
                 checks.append('reinstall_preserves_database_and_credentials')
-                run([str(uninstaller), '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART'])
+                uninstall(uninstaller, logs)
+                uninstall_completed = True
                 if executable.exists() or shortcut.exists():
                     raise RuntimeError('Удаление оставило EXE или ярлык')
                 preserved()
                 checks.append('uninstall_preserves_database_and_credentials')
             finally:
-                if uninstaller.exists():
-                    run([str(uninstaller), '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART'])
+                if not uninstall_completed and uninstaller.exists():
+                    uninstall(uninstaller, logs)
         report = {'platform': sys.platform, 'runner_os': os.environ.get('RUNNER_OS'),
                   'checks': checks, 'installer': installer.name, 'sha256': digest(installer),
                   'limitations': ['No real WB API calls', 'Windows runner is not a Windows 11 user PC',
