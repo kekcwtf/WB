@@ -1,6 +1,7 @@
 import os
 os.environ.setdefault('QT_QPA_PLATFORM', 'offscreen')
 import tempfile
+from contextlib import ExitStack
 import unittest
 import time
 from datetime import date
@@ -28,10 +29,10 @@ class DesktopBackupTests(unittest.TestCase):
         self.fail('Фоновая операция не завершилась')
 
     def test_background_restore_reloads_stores_costs_taxes_theme_and_period(self):
-        with tempfile.TemporaryDirectory() as folder:
+        with tempfile.TemporaryDirectory() as folder, ExitStack() as resources:
             path = Path(folder) / 'live.sqlite'
             window = Window(path)
-            self.addCleanup(window.close)
+            resources.callback(window.close)
             window.stores = [{'id': 'saved', 'name': 'Сохранённый магазин'}]
             window.ledger.set_setting('_app', 'stores', window.stores)
             window.store.addItem('Сохранённый магазин', 'saved')
@@ -84,9 +85,9 @@ class DesktopBackupTests(unittest.TestCase):
             reopened.close()
 
     def test_invalid_restore_leaves_interface_and_data_available(self):
-        with tempfile.TemporaryDirectory() as folder:
+        with tempfile.TemporaryDirectory() as folder, ExitStack() as resources:
             window = Window(Path(folder) / 'live.sqlite')
-            self.addCleanup(window.close)
+            resources.callback(window.close)
             window.ledger.set_setting('_app', 'sentinel', 'untouched')
             bad = Path(folder) / 'bad.sqlite';bad.write_bytes(b'broken')
             with patch.object(window, 'error') as error:
@@ -99,9 +100,9 @@ class DesktopBackupTests(unittest.TestCase):
             self.assertFalse((Path(folder) / 'backups').exists())
 
     def test_sync_and_maintenance_cannot_start_together(self):
-        with tempfile.TemporaryDirectory() as folder:
+        with tempfile.TemporaryDirectory() as folder, ExitStack() as resources:
             window = Window(Path(folder) / 'live.sqlite')
-            self.addCleanup(window.close)
+            resources.callback(window.close)
             window.worker = Mock()
             with patch.object(window, 'error') as error:
                 self.assertFalse(window.start_maintenance(Path(folder) / 'copy.sqlite'))

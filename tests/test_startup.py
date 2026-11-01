@@ -18,7 +18,7 @@ class StartupTests(unittest.TestCase):
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)
-        self.root = Path(self.directory.name)
+        self.root = Path(self.directory.name).resolve()
 
     def backup(self):
         source = self.root / 'saved.sqlite'
@@ -33,6 +33,8 @@ class StartupTests(unittest.TestCase):
         path = check_startup(self.root)
         self.assertEqual(path, self.root / 'wb-profit.sqlite')
         self.assertFalse(path.exists())
+        alias = self.root / '..' / self.root.name
+        self.assertEqual(active_database(alias), path)
 
     def test_corrupted_primary_database_is_detected_without_replacing_it(self):
         path = self.root / 'wb-profit.sqlite'

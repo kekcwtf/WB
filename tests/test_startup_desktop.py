@@ -32,7 +32,7 @@ class StartupDesktopTests(unittest.TestCase):
 
     def test_corrupted_database_can_be_recovered_before_main_window_exists(self):
         with tempfile.TemporaryDirectory() as folder:
-            root = Path(folder)
+            root = Path(folder).resolve()
             (root / 'wb-profit.sqlite').write_bytes(b'corrupted')
             source = root / 'backup.sqlite'
             ledger = Ledger(source)
@@ -92,7 +92,7 @@ class StartupDesktopTests(unittest.TestCase):
 
     def test_complete_launch_recovers_and_starts_main_window_in_separate_process(self):
         with tempfile.TemporaryDirectory() as folder:
-            root=Path(folder)
+            root=Path(folder).resolve()
             (root/'wb-profit.sqlite').write_bytes(b'corrupted original')
             source=root/'backup.sqlite'
             ledger=Ledger(source)

@@ -35,7 +35,7 @@ class SessionLock:
 
 
 def active_database(folder):
-    folder = Path(folder)
+    folder = Path(folder).resolve()
     pointer = folder / 'active-database.json'
     if not pointer.exists():
         return folder / 'wb-profit.sqlite'
