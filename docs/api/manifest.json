@@ -1,0 +1,44 @@
+{
+  "finances": {
+    "sha256": "6998ea47923bb34d0db36fec9a9a225e85149a03849935092eb5523e9e74d7e2",
+    "retrieved": "2026-11-01",
+    "source": "13-finances",
+    "url": "https://dev.wildberries.ru/api/swagger/yaml/ru/13-finances.yaml?region=ru",
+    "http_status": 200
+  },
+  "general": {
+    "sha256": "e3934638f837237d876a9221ee4aa09e926c4032183de8ce6bffa42e0ed37483",
+    "retrieved": "2026-11-01",
+    "source": "01-general",
+    "url": "https://dev.wildberries.ru/api/swagger/yaml/ru/01-general.yaml?region=ru",
+    "http_status": 200
+  },
+  "reports": {
+    "sha256": "9af3ca0525427047964459ece1c0e36ead6fd1c1abee28d83b4fbc39d8aea35c",
+    "retrieved": "2026-11-01",
+    "source": "12-reports",
+    "url": "https://dev.wildberries.ru/api/swagger/yaml/ru/12-reports.yaml?region=ru",
+    "http_status": 200
+  },
+  "items": {
+    "sha256": "84c2d710b02571900d6c15c98e91c8d2d8e56c632285887c7792acb75e14e09c",
+    "retrieved": "2026-11-01",
+    "source": "02-items",
+    "url": "https://dev.wildberries.ru/api/swagger/yaml/ru/02-items.yaml?region=ru",
+    "http_status": 200
+  },
+  "promotion": {
+    "sha256": "51a7ac90d1e6a29262f24157d351bae6f25971ea743932eca000ffb5bf83866d",
+    "retrieved": "2026-11-01",
+    "source": "08-promotion",
+    "url": "https://dev.wildberries.ru/api/swagger/yaml/ru/08-promotion.yaml?region=ru",
+    "http_status": 200
+  },
+  "rates": {
+    "sha256": "50e55adf0584c81a14620afe8064fbe2b9a954b168f12aca350785a4bbce8d9e",
+    "retrieved": "2026-11-01",
+    "source": "10-rates",
+    "url": "https://dev.wildberries.ru/api/swagger/yaml/ru/10-rates.yaml?region=ru",
+    "http_status": 200
+  }
+}
